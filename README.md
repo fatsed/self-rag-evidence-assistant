@@ -1,6 +1,9 @@
 # Self-RAG Evidence Assistant 🧠📄
+
 A simple document-based assistant inspired by the Self-RAG paper.
+
 The goal of this project is to answer questions using evidence from local documents, then check whether the answer is actually supported by that evidence.
+
 This is not a full implementation of the original Self-RAG model. It is a smaller educational project that tries to simulate the main idea in a simple and practical way.
 
 ## Project Idea 💡
@@ -96,6 +99,7 @@ Usefulness: 5/5
 
 ## Why I Built This ✨
 I built this project to better understand how Self-RAG works and how retrieval, generation, and critique can be combined in one workflow.
+
 Instead of only reading the paper, I wanted to turn the main idea into a small working project.
 
 
@@ -105,7 +109,10 @@ The original Self-RAG framework trains a language model to generate reflection t
 
 
 ## Reference 📚
+
 Paper: Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection  
 Official repository: https://github.com/akariasai/self-rag
+
 ## Status
+
 Work in progress.
