@@ -52,6 +52,7 @@ Show the final answer, evidence, and critique result
 | Evidence-based generation | Generate answers using retrieved text      |
 
 ##Project Structure
+
 self-rag-evidence-assistant/
 │
 ├── README.md
