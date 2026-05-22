@@ -123,7 +123,6 @@ Install the required packages:
 ```bash
 pip install -r requirements.txt
 ```
-
 ## Environment Variables 🔐
 
 This project uses Groq API for answer generation and critique.
@@ -135,7 +134,7 @@ GROQ_API_KEY=your_groq_api_key_here
 ```
 
 A sample file is provided as:
-
+Do not upload your real `.env` file to GitHub.
 ```text
 .env.example
 ```
@@ -158,7 +157,7 @@ The app allows you to:
 4. Generate an answer
 5. Check whether the answer is supported by evidence
 
-Do not upload your real `.env` file to GitHub.
+
 
 ## Example Output 🧪
 
@@ -201,7 +200,6 @@ Instead of only reading the paper, I wanted to turn the main idea into a working
 
 Paper: Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection  
 Official repository: https://github.com/akariasai/self-rag
-## Status
 
 ## Status
 
