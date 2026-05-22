@@ -29,9 +29,12 @@ def critique_answer(question, retrieved_chunks, answer):
     Your task is to check whether the answer is supported by the retrieved evidence.
     Use only the evidence below. Do not use outside knowledge.
     
-    Question: {question}
-    Evidence: {evidence_text}
-    Answer: {answer}
+    Question:
+    {question}
+    Evidence: 
+    {evidence_text}
+    Answer:
+    {answer}
     
     Evaluate the answer using this exact format:
     Evidence relevance: Relevant/Irrelevant
