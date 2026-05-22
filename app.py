@@ -123,7 +123,7 @@ with settings_col:
         "Minimum evidence score",
         min_value=0.0,
         max_value=1.0,
-        value=0.40,
+        value=0.15,
         step=0.05,
     )
     if uploaded_files:

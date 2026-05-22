@@ -60,6 +60,8 @@ def critique_answer(question, retrieved_chunks, answer):
         - If the answer includes information not found in the evidence, mark it as Partially supported or Not supported.
         - If the retrieved evidence is weak or unrelated, mark evidence relevance as Partially relevant or Irrelevant.
         - If the answer is fully grounded in the evidence, mark it as Fully supported.
+        - If the generated answer says that the evidence is not sufficient, do not say it contradicts the evidence.
+        - In that case, mark support level as Not supported and warning as "No direct evidence found."
         - Keep the JSON values short.
         - Do not include markdown.
         - Do not include extra text outside the JSON.

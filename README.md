@@ -26,6 +26,9 @@ Critique the answer
      ↓
 Show the final answer, evidence, and critique result
 ```
+## Demo 🖼️
+
+![Demo](assets/demo.png)
 
 ## Main Features ✅
 - Load local text documents
