@@ -1,7 +1,9 @@
 #pip install -r requirements.txt
 streamlit
 pypdf
+python-docx
 sentence-transformers
 scikit-learn
 numpy
+groq
 python-dotenv

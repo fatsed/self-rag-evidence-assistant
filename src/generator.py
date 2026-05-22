@@ -1,40 +1,46 @@
 import os
-
 from dotenv import load_dotenv
-from openai import OpenAI
-from openai.types.chat import ChatCompletionMessageParam
-
+from groq import Groq
+from groq.types.chat import ChatCompletionUserMessageParam
 
 load_dotenv()
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
-
-def generate_answer(question, evidence):
+def generate_answer(question, retrieved_chunks):
     """
-    Generate an answer using the user question and retrieved evidence.
+    generate an answer using the user question and retrieved evidence
     """
-    prompt = f"""You are an evidence-based assistant.
-    Answer the user's question using only the evidence provided below.
-    If the evidence is not enough, say that the evidence is not sufficient.
+    if not retrieved_chunks:
+        return "I could not find enough evidence in the uploaded documents to answer this question."
 
-    Question:
-    {question}
+    evidence_text = ""
+    for chunk in retrieved_chunks:
+        evidence_text += f"Source: {chunk['file_name']} - chunk {chunk['chunk_id']}\n"
+        evidence_text += chunk["text"] + "\n\n"
 
-    Evidence:
-    {evidence}
+    prompt = f"""
+    You are an evidence-based question answering assistant.
+    Answer the user's question using only the evidence below.
+    Do not use outside knowledge
+    if the evidence is not enough, say that the evidence is not sufficient.
+    
+    Question: {question}
+    
+    Evidence: {evidence_text}
+    
+    Answer: 
+    """
+    messages: list[ChatCompletionUserMessageParam] = [
+        {
+            "role": "user",
+            "content": prompt
+        }
+    ]
 
-    Answer:
-"""
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {
-                "role": "user",
-                "content": prompt,
-            }
-        ],
-        temperature=0.2,
+        model = "llama-3.1-8b-instant",
+        messages = messages,
+        temperature = 0.2,
     )
 
     return response.choices[0].message.content.strip()

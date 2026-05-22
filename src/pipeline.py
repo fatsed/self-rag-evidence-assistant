@@ -1,37 +1,36 @@
+from src.file_loader import load_uploaded_files
+from src.chunker import create_document_chunks
+from src.retriever import retrieve_relevant_chunks
+from src.generator import generate_answer
+from src.critic import critique_answer
 
-from retriever import retrieve_relevant_chunks
-from generator import generate_answer
-from critic import critique_answer
 
-
-def run_pipeline(question):
+def run_pipeline(uploaded_files, question, top_k=3):
     """
-    Run the full Self-RAG-inspired pipeline.
+    run the full evidence QA pipeline.
     """
-
-    retrieved_chunks = retrieve_relevant_chunks(question)
-
-    if not retrieved_chunks:
+    if not uploaded_files:
         return {
-            "question": question,
-            "retrieval_needed": "Yes",
-            "evidence": "No relevant evidence found.",
-            "answer": "I could not find enough evidence in the documents to answer this question.",
-            "critique": "Evidence relevance: Irrelevant\nSupport level: Not supported\nUsefulness: 1\nWarning: No relevant evidence was found.",
+            "answer": "Please upload at least one document.",
+            "evidence": [],
+            "critique": "No critique available.",
         }
 
-    evidence = "\n\n".join(
-        [chunk["chunk"] for chunk in retrieved_chunks]
-    )
+    if not question.strip():
+        return {
+            "answer": "Please enter a question.",
+            "evidence": [],
+            "critique": "No critique available.",
+        }
 
-    answer = generate_answer(question, evidence)
-
-    critique = critique_answer(question, evidence, answer)
+    documents = load_uploaded_files(uploaded_files)
+    chunks = create_document_chunks(documents)
+    retrieved_chunks = retrieve_relevant_chunks(question, chunks, top_k=top_k)
+    answer = generate_answer(question, retrieved_chunks)
+    critique = critique_answer(question, retrieved_chunks, answer)
 
     return {
-        "question": question,
-        "retrieval_needed": "Yes",
-        "evidence": evidence,
         "answer": answer,
+        "evidence": retrieved_chunks,
         "critique": critique,
     }
