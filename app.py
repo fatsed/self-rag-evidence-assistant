@@ -174,6 +174,20 @@ if st.session_state.result:
     answer = result.get("answer", "")
     critique = result.get("critique", "")
     evidence = result.get("evidence", [])
+
+    if isinstance(critique, dict):
+        evidence_relevance = critique.get("evidence_relevance", "Unknown")
+        support_level = critique.get("support_level", "Unknown")
+        usefulness = critique.get("usefulness", "Unknown")
+        warning = critique.get("warning", "No warning.")
+        reason = critique.get("reason", "")
+    else:
+        evidence_relevance = "Unknown"
+        support_level = "Unknown"
+        usefulness = "Unknown"
+        warning = "The critique was returned as plain text."
+        reason = critique
+
     with (answer_tab):
         st.subheader("Answer")
 
@@ -190,7 +204,11 @@ if st.session_state.result:
             Answer:
             {answer}
             Critique:
-            {critique}
+            Evidence relevance: {evidence_relevance}
+            Support level: {support_level}
+            Usefulness: {usefulness}
+            Warning: {warning}
+            Reason: {reason}
             """
 
         st.download_button(
@@ -214,15 +232,29 @@ if st.session_state.result:
 
     with critique_tab:
         st.subheader("Critique")
-        critique_text = critique
-        if "Fully supported" in critique_text:
-            st.success(critique_text)
-        elif "Partially supported" in critique_text:
-            st.warning(critique_text)
-        elif "Not supported" in critique_text:
-            st.error(critique_text)
+
+        card1, card2, card3 = st.columns(3)
+        with card1:
+            st.metric("Evidence relevance", evidence_relevance)
+        with card2:
+            st.metric("Support level", support_level)
+        with card3:
+            st.metric("Usefulness", usefulness)
+
+        st.markdown("### Warning")
+
+        if support_level == "Fully supported":
+            st.success(warning)
+        elif support_level == "Partially supported":
+            st.warning(warning)
+        elif support_level == "Not supported":
+            st.error(warning)
         else:
-            st.info(critique_text)
+            st.info(warning)
+
+        st.markdown("### Reason")
+        st.write(reason)
+
 
     with files_tab:
         st.subheader("Uploaded Files")

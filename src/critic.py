@@ -1,56 +1,92 @@
 import os
-
+import json
 from dotenv import load_dotenv
 from groq import Groq
 from groq.types.chat import ChatCompletionUserMessageParam
+
 
 load_dotenv()
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def critique_answer(question, retrieved_chunks, answer):
     """
-    critic the generate answer based on the retrieved evidence.
+    critic the generated answer based on the retrieved evidence.
     """
     if not retrieved_chunks:
-        return (
-            "Evidence relevance: Irrelevant\n",
-            "Support Level: Not supported\n",
-            "Usefulness: 1/5\n",
-            "Warning: No relevant evidence was found",
-        )
+        return {
+            "evidence_relevance": "Irrelevant",
+            "support_level": "Not supported",
+            "usefulness": "1/5",
+            "warning": "No relevant evidence was found.",
+            "reason": "The system could not retrieve any evidence from the uploaded documents.",
+        }
 
     evidence_text = ""
+
     for chunk in retrieved_chunks:
         evidence_text += f"Source: {chunk['file_name']} - Chunk {chunk['chunk_id']}\n"
+        evidence_text += f"Similarity score: {chunk['score']:.3f}\n"
         evidence_text += chunk["text"] + "\n\n"
 
     prompt = f"""
-    You are a strict evidence checker.
-    Your task is to check whether the answer is supported by the retrieved evidence.
-    Use only the evidence below. Do not use outside knowledge.
+        You are a strict evidence checker.
+        Your job is to evaluate whether the generated answer is supported by the retrieved evidence.
     
-    Question:
-    {question}
-    Evidence: 
-    {evidence_text}
-    Answer:
-    {answer}
-    
-    Evaluate the answer using this exact format:
-    Evidence relevance: Relevant/Irrelevant
-    Support Level: supported / Partially supported / Not supported
-    Usefulness: 1-5
-    Warning: Write a short warning if the answer is not fully supported. Otherwise write "No warning."
-    """
+        Use only the evidence provided below.
+        Do not use outside knowledge.
+        Do not explain the topic generally.
+        Focus only on whether the answer is grounded in the evidence.
+        
+        Question:
+        {question}
+        
+        Retrieved evidence:
+        {evidence_text}
+        
+        Generated answer:
+        {answer}
+        
+        Return only valid JSON using exactly this structure:
+        
+        {{
+          "evidence_relevance": "Relevant / Partially relevant / Irrelevant",
+          "support_level": "Fully supported / Partially supported / Not supported",
+          "usefulness": "1/5, 2/5, 3/5, 4/5, or 5/5",
+          "warning": "No warning. OR a short warning if the answer is not fully supported.",
+          "reason": "One short sentence explaining the evaluation."
+        }}
+        
+        Rules:
+        - If the answer includes information not found in the evidence, mark it as Partially supported or Not supported.
+        - If the retrieved evidence is weak or unrelated, mark evidence relevance as Partially relevant or Irrelevant.
+        - If the answer is fully grounded in the evidence, mark it as Fully supported.
+        - Keep the JSON values short.
+        - Do not include markdown.
+        - Do not include extra text outside the JSON.
+        """
+
     messages: list[ChatCompletionUserMessageParam] = [
         {
             "role": "user",
             "content": prompt,
         }
     ]
+
     response = client.chat.completions.create(
-        model = "llama-3.1-8b-instant",
-        messages = messages,
-        temperature = 0.1,
+        model="llama-3.1-8b-instant",
+        messages=messages,
+        temperature=0.0,
+        response_format={"type": "json_object"},
     )
-    return response.choices[0].message.content.strip()
+    critique_text = response.choices[0].message.content.strip()
+
+    try:
+        return json.loads(critique_text)
+    except json.JSONDecodeError:
+        return {
+            "evidence_relevance": "Unknown",
+            "support_level": "Unknown",
+            "usefulness": "Unknown",
+            "warning": "The critique could not be parsed as JSON.",
+            "reason": critique_text,
+        }
