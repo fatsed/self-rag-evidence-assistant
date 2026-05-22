@@ -1,54 +1,67 @@
 # Self-RAG Evidence Assistant 🧠📄
 
-A simple document-based assistant inspired by the Self-RAG paper.
+A Streamlit-based multi-document question-answering assistant inspired by the Self-RAG paper.
 
-The goal of this project is to answer questions using evidence from local documents, then check whether the answer is actually supported by that evidence.
+This project allows users to upload multiple documents, ask questions, retrieve relevant evidence, generate an answer, and check whether the answer is supported by the retrieved evidence.
 
-This is not a full implementation of the original Self-RAG model. It is a smaller educational project that tries to simulate the main idea in a simple and practical way.
+It is not a full implementation of the original Self-RAG model. Instead, it is a simplified practical project that applies the main ideas of retrieval, generation, and critique in an evidence-based QA workflow.
 
 ## Project Idea 💡
-Traditional RAG systems usually retrieve documents first and then generate an answer based on those documents.
-Self-RAG adds a more reflective step. Instead of always retrieving information, the model can first decide whether retrieval is needed. After generating an answer, it can also check the quality of the evidence and whether the answer is supported.
-This project follows that idea in a lightweight way.
+
+Traditional RAG systems usually retrieve documents and then generate an answer using the retrieved information.
+
+Self-RAG adds a more reflective process. It introduces the idea of checking whether retrieval is needed, whether the retrieved evidence is relevant, and whether the generated answer is supported.
+
+This project follows that idea in a simplified way. The assistant retrieves evidence from uploaded documents, generates an answer using a language model API, and then critiques the answer based on the retrieved evidence.
 
 ## How It Works ⚙️
+
 The assistant follows this pipeline:
+
 ```text
-User Question
+Upload documents
      ↓
-Decide if retrieval is needed
+Extract text from PDF / TXT / DOCX files
      ↓
-Retrieve relevant document chunks
+Split documents into chunks
      ↓
-Generate an answer using the evidence
+Create embeddings for the chunks
      ↓
-Critique the answer
+Retrieve the most relevant evidence
      ↓
-Show the final answer, evidence, and critique result
+Generate an answer using Groq API
+     ↓
+Critique the answer using structured JSON output
+     ↓
+Show answer, evidence, support level, warning, and reason
 ```
 
 ## Main Features ✅
-- Load local text documents
-- Ask a question about the documents
-- Retrieve the most relevant text chunks
-- Generate an answer using an LLM API
-- Check if the retrieved evidence is relevant
-- Check if the answer is supported by the evidence
-- Give a simple usefulness score
-- Warn the user when the answer is not supported by the evidence
+
+- Upload multiple documents
+- Support PDF, TXT, and DOCX files
+- Extract text from uploaded files
+- Split long documents into smaller chunks
+- Use embedding-based retrieval to find relevant evidence
+- Apply a minimum evidence score threshold
+- Generate answers using Groq API
+- Critique answers using structured JSON output
+- Show evidence relevance, support level, usefulness, warning, and reason
+- Download the final result as a TXT file
 
 
 ## Self-RAG Inspired Components 🔍
+
 | Self-RAG Concept | Simplified Version in This Project |
 |---|---|
-| Retrieval | Search local documents for relevant chunks |
-| Retrieval Token | Decide whether retrieval is needed |
-| Critique Token | Check relevance, support, and usefulness |
-| Reflection | Ask the model to review its own answer |
-| Evidence-based generation | Generate answers using retrieved text |
-
+| Retrieval | Finds relevant chunks from uploaded documents |
+| Retrieval Token | Simulated through the evidence score threshold |
+| Critique Token | Structured critique with relevance, support, and usefulness |
+| Reflection | The assistant checks whether the answer is grounded in evidence |
+| Evidence-based generation | The answer is generated only from retrieved evidence |
 
 ## Project Structure 📁
+
 ```text
 self-rag-evidence-assistant/
 │
@@ -57,10 +70,13 @@ self-rag-evidence-assistant/
 ├── .env.example
 ├── app.py
 │
-├── documents/
-│   └── self_rag_notes.txt
+├── .streamlit/
+│   └── config.toml
 │
 ├── src/
+│   ├── file_loader.py
+│   ├── chunker.py
+│   ├── embedder.py
 │   ├── retriever.py
 │   ├── generator.py
 │   ├── critic.py
@@ -70,48 +86,122 @@ self-rag-evidence-assistant/
     └── example_outputs.md
 ```
 
+## Tech Stack 🛠️
+
+- Python
+- Streamlit
+- Groq API
+- Sentence Transformers
+- Scikit-learn
+- PyPDF
+- python-docx
+- NumPy
+
+## Installation 🚀
+
+Clone the repository:
+
+```bash
+git clone https://github.com/fatsed/self-rag-evidence-assistant.git
+cd self-rag-evidence-assistant
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv .venv
+```
+
+Activate the virtual environment:
+
+```bash
+.venv\Scripts\activate
+```
+
+Install the required packages:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Environment Variables 🔐
+
+This project uses Groq API for answer generation and critique.
+
+Create a `.env` file in the project root and add your Groq API key:
+
+```env
+GROQ_API_KEY=your_groq_api_key_here
+```
+
+A sample file is provided as:
+
+```text
+.env.example
+```
+
+## How to Run ▶️
+
+Run the Streamlit app:
+
+```bash
+streamlit run app.py
+```
+
+Then open the local URL shown in the terminal.
+
+The app allows you to:
+
+1. Upload one or more PDF, TXT, or DOCX files
+2. Ask a question about the uploaded documents
+3. Retrieve relevant evidence
+4. Generate an answer
+5. Check whether the answer is supported by evidence
+
+Do not upload your real `.env` file to GitHub.
 
 ## Example Output 🧪
+
 ```text
 Question:
-What is the main idea of Self-RAG?
+What is critique in Self-RAG?
 
 Answer:
-Self-RAG is a retrieval-augmented generation framework that allows a language model to retrieve information only when needed and critique its own generated response.
+Critique in Self-RAG is the process of evaluating the retrieved evidence and the generated answer. It helps check whether the evidence is relevant and whether the answer is supported by that evidence.
 
-Evidence:
-"SELF-RAG adaptively retrieves passages on-demand and reflects on retrieved passages and its own generations."
+Retrieved Evidence:
+Source: self-rag-paper.pdf
+Chunk: 2
+Score: 0.684
 
 Critique:
-Retrieval needed: Yes
 Evidence relevance: Relevant
 Support level: Fully supported
 Usefulness: 5/5
+Warning: No warning.
+Reason: The answer is directly supported by the retrieved evidence.
 ```
 
+## Important Note ⚠️
 
-## Tech Stack 🛠️
-- Python
-- OpenAI API
-- Local text documents
-- Simple keyword-based retrieval
+This project is not a full reproduction of the original Self-RAG paper.
 
+The original Self-RAG framework trains a language model to generate reflection tokens during generation. This project is a smaller practical version that simulates the main workflow using document retrieval, answer generation, and structured critique.
+
+The goal of this project is to understand and apply the main Self-RAG ideas in a simple document question-answering application.
 
 ## Why I Built This ✨
-I built this project to better understand how Self-RAG works and how retrieval, generation, and critique can be combined in one workflow.
 
-Instead of only reading the paper, I wanted to turn the main idea into a small working project.
+I built this project to better understand how RAG and Self-RAG work in practice.
 
-
-## Important Note ⚠️
-This project is not a reproduction of the full Self-RAG paper.
-The original Self-RAG framework trains a language model to generate reflection tokens during generation. This project uses an LLM API to simulate the main steps in a simpler way.
+Instead of only reading the paper, I wanted to turn the main idea into a working project where users can upload documents, ask questions, retrieve evidence, and check whether the answer is supported.
 
 
 ## Reference 📚
 
 Paper: Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection  
 Official repository: https://github.com/akariasai/self-rag
+## Status
 
 ## Status
 
