@@ -1,2 +1,7 @@
-openai
+#pip install -r requirements.txt
+streamlit
+pypdf
+sentence-transformers
+scikit-learn
+numpy
 python-dotenv
