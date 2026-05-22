@@ -119,6 +119,13 @@ with settings_col:
         max_value=5,
         value=3,
     )
+    min_score = st.slider(
+        "Minimum evidence score",
+        min_value=0.0,
+        max_value=1.0,
+        value=0.40,
+        step=0.05,
+    )
     if uploaded_files:
         st.success(f"{len(uploaded_files)} file(s) uploaded")
     else:
@@ -158,7 +165,12 @@ if run_button:
     else:
         st.info("Searching documents and generating answer...")
 
-        result = run_pipeline(uploaded_files, question, top_k=top_k)
+        result = run_pipeline(
+            uploaded_files,
+            question,
+            top_k=top_k,
+            min_score=min_score,
+        )
         st.session_state.result = result
         st.session_state.last_question = question
         st.session_state.uploaded_file_names = [
