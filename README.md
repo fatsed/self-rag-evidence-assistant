@@ -63,6 +63,15 @@ Show answer, evidence, support level, warning, and reason
 | Reflection | The assistant checks whether the answer is grounded in evidence |
 | Evidence-based generation | The answer is generated only from retrieved evidence |
 
+## Study Notes 📝
+
+I also added short notes to explain the main concepts behind this project:
+
+- [Self-RAG Paper Summary](notes/paper_summary.md)
+- [Traditional RAG](notes/traditional_rag.md)
+- [Self-RAG](notes/self_rag.md)
+- [Key Concepts](notes/key_concepts.md)
+
 ## Project Structure 📁
 
 ```text
