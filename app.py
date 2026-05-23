@@ -64,6 +64,10 @@ if "last_question" not in st.session_state:
     st.session_state.last_question = ""
 if "uploaded_file_names" not in st.session_state:
     st.session_state.uploaded_file_names = []
+if "uploader_key" not in st.session_state:
+    st.session_state.uploader_key = 0
+if "question_key" not in st.session_state:
+    st.session_state.question_key = 0
 
 st.markdown(
     '<div class="main-title">Self-RAG Evidence Assistant 🧠📄</div>',
@@ -103,12 +107,14 @@ with input_col:
         "Choose one or more files",
         type=["pdf", "txt", "docx"],
         accept_multiple_files=True,
+        key=f"file_uploader_{st.session_state.uploader_key}",
     )
     st.subheader("Ask a question")
     question = st.text_area(
         "Your question",
         placeholder="Example: What is critique in Self-RAG?",
         height=120,
+        key=f"question_{st.session_state.question_key}",
     )
 
 with settings_col:
@@ -155,6 +161,8 @@ if clear_button:
     st.session_state.result = None
     st.session_state.last_question = ""
     st.session_state.uploaded_file_names = []
+    st.session_state.uploader_key += 1
+    st.session_state.question_key += 1
     st.rerun()
 
 if run_button:
