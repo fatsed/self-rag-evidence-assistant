@@ -4,7 +4,10 @@ from groq import Groq
 from groq.types.chat import ChatCompletionUserMessageParam
 
 load_dotenv()
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+api_key = os.getenv("GROQ_API_KEY")
+
+client = Groq(api_key=api_key) if api_key else None
 
 def generate_answer(question, retrieved_chunks):
     """
@@ -12,6 +15,9 @@ def generate_answer(question, retrieved_chunks):
     """
     if not retrieved_chunks:
         return "I could not find enough evidence in the uploaded documents to answer this question."
+
+    if client is None:
+        return "Groq API key is missing. Please add GROQ_API_KEY to your env_backup. file."
 
     evidence_text = ""
     for chunk in retrieved_chunks:

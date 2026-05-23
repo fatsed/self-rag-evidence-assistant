@@ -6,7 +6,10 @@ from groq.types.chat import ChatCompletionUserMessageParam
 
 
 load_dotenv()
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+api_key = os.getenv("GROQ_API_KEY")
+
+client = Groq(api_key=api_key) if api_key else None
 
 def critique_answer(question, retrieved_chunks, answer):
     """
@@ -19,6 +22,15 @@ def critique_answer(question, retrieved_chunks, answer):
             "usefulness": "1/5",
             "warning": "No relevant evidence was found.",
             "reason": "The system could not retrieve any evidence from the uploaded documents.",
+        }
+
+    if client is None:
+        return {
+            "evidence_relevance": "Unknown",
+            "support_level": "Not supported",
+            "usefulness": "1/5",
+            "warning": "Groq API key is missing.",
+            "reason": "Please add GROQ_API_KEY to your env_backup. file.",
         }
 
     evidence_text = ""
