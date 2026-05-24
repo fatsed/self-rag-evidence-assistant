@@ -126,11 +126,16 @@ with settings_col:
         value=3,
     )
     min_score = st.slider(
-        "Minimum evidence score",
-        min_value=0.0,
-        max_value=1.0,
-        value=0.15,
-        step=0.05,
+    "Minimum evidence score",
+    min_value=0.0,
+    max_value=1.0,
+    value=0.15,
+    step=0.05,
+    )
+
+    st.caption(
+    "Evidence score shows how similar a retrieved chunk is to your question. "
+    "Higher scores usually mean more relevant evidence."
     )
     if uploaded_files:
         st.success(f"{len(uploaded_files)} file(s) uploaded")
@@ -240,6 +245,9 @@ if st.session_state.result:
 
     with evidence_tab:
         st.subheader("Retrieved Evidence")
+        st.caption(
+            "Each score is based on semantic similarity between your question and the retrieved text chunk."
+        )
         if evidence:
             for i, chunk in enumerate(evidence, start=1):
                 score = chunk["score"]
