@@ -3,7 +3,7 @@ from src.chunker import create_document_chunks
 from src.retriever import retrieve_relevant_chunks
 from src.generator import generate_answer
 from src.critic import critique_answer
-
+from src.reflection import decide_retrieval_need, create_reflection_summary
 
 def run_pipeline(uploaded_files, question, top_k=3, min_score=0.25):
     """
@@ -33,7 +33,29 @@ def run_pipeline(uploaded_files, question, top_k=3, min_score=0.25):
                 "reason": "The system needs a question to retrieve evidence.",
             },
         }
+    retrieval_decision = decide_retrieval_need(question, uploaded_files)
 
+    if not retrieval_decision["needed"]:
+        critique = {
+            "evidence_relevance": "Irrelevant",
+            "support_level": "Not supported",
+            "usefulness": "1/5",
+            "warning": "Retrieval was not performed.",
+            "reason": retrieval_decision["reason"],
+        }
+
+        reflection = create_reflection_summary(
+            retrieval_decision,
+            [],
+            critique,
+        )
+
+        return {
+            "answer": "The system could not perform retrieval for this question.",
+            "evidence": [],
+            "critique": critique,
+            "reflection": reflection,
+        }
     documents = load_uploaded_files(uploaded_files)
     chunks = create_document_chunks(documents)
 
@@ -47,8 +69,15 @@ def run_pipeline(uploaded_files, question, top_k=3, min_score=0.25):
     answer = generate_answer(question, retrieved_chunks)
     critique = critique_answer(question, retrieved_chunks, answer)
 
+    reflection = create_reflection_summary(
+        retrieval_decision,
+        retrieved_chunks,
+        critique,
+    )
+
     return {
         "answer": answer,
         "evidence": retrieved_chunks,
         "critique": critique,
+        "reflection": reflection,
     }
