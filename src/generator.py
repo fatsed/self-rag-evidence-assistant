@@ -17,7 +17,7 @@ def generate_answer(question, retrieved_chunks):
         return "I could not find enough evidence in the uploaded documents to answer this question."
 
     if client is None:
-        return "Groq API key is missing. Please add GROQ_API_KEY to your env_backup. file."
+        return "Groq API key is missing. Please add GROQ_API_KEY to your .env file."
 
     evidence_text = ""
     for chunk in retrieved_chunks:

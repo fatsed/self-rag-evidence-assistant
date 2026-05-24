@@ -30,7 +30,7 @@ def critique_answer(question, retrieved_chunks, answer):
             "support_level": "Not supported",
             "usefulness": "1/5",
             "warning": "Groq API key is missing.",
-            "reason": "Please add GROQ_API_KEY to your env_backup. file.",
+            "reason": "Please add GROQ_API_KEY to your .env file.",
         }
 
     evidence_text = ""
