@@ -44,9 +44,10 @@ def decide_retrieval_need(question, uploaded_files):
         "reason": "The answer should be grounded in the uploaded documents.",
     }
 
-def judge_evidence_quality(retrieved_chunks, good_score_threshold=0.35):
+def judge_evidence_quality(retrieved_chunks):
     """
-    Judge the quality of the retrieved evidence based on the best similarity score.
+    Judge evidence quality using LLM-based evidence labels first,
+    while still keeping the best similarity score.
     """
     if not retrieved_chunks:
         return {
@@ -56,17 +57,26 @@ def judge_evidence_quality(retrieved_chunks, good_score_threshold=0.35):
         }
 
     best_score = max(chunk["score"] for chunk in retrieved_chunks)
+    labels = [chunk.get("evidence_label", "Weak evidence") for chunk in retrieved_chunks]
 
-    if best_score >= good_score_threshold:
+    if "Relevant" in labels:
         return {
             "quality": "Strong evidence",
             "best_score": round(best_score, 3),
-            "reason": "The retrieved evidence has a good similarity score and is likely relevant to the question.",
+            "reason": "At least one retrieved chunk was judged relevant by the evidence critique step.",
         }
+
+    if "Partially relevant" in labels:
+        return {
+            "quality": "Partial evidence",
+            "best_score": round(best_score, 3),
+            "reason": "The retrieved chunks are related to the question but do not fully support a direct answer.",
+        }
+
     return {
         "quality": "Weak evidence",
         "best_score": round(best_score, 3),
-        "reason": "The retrieved evidence may not be strongly related to the question.",
+        "reason": "The retrieved chunks were not judged relevant enough to support the answer.",
     }
 
 def count_evidence_labels(retrieved_chunks):
