@@ -1,14 +1,15 @@
 from src.file_loader import load_uploaded_files
 from src.chunker import create_document_chunks
 from src.retriever import retrieve_relevant_chunks
+from src.evidence_critic import critique_retrieved_evidence
 from src.generator import generate_answer
 from src.critic import critique_answer
+from src.reviser import revise_answer_if_needed
 from src.reflection import (
     decide_retrieval_need,
     judge_evidence_quality,
     create_reflection_summary,
 )
-from src.evidence_critic import critique_retrieved_evidence
 
 def run_pipeline(uploaded_files, question, top_k=3, min_score=0.25):
     """
@@ -108,6 +109,14 @@ def run_pipeline(uploaded_files, question, top_k=3, min_score=0.25):
     evidence_quality = judge_evidence_quality(retrieved_chunks)
 
     answer = generate_answer(question, retrieved_chunks)
+    critique = critique_answer(question, retrieved_chunks, answer)
+
+    answer = revise_answer_if_needed(
+        question,
+        retrieved_chunks,
+        answer,
+        critique,
+    )
 
     critique = critique_answer(question, retrieved_chunks, answer)
 
