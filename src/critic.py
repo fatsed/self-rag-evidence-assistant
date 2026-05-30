@@ -26,15 +26,6 @@ def critique_answer(question, retrieved_chunks, answer):
             "reason": "Please add your GROQ_API_KEY to the .env file before running the critique step.",
         }
 
-    if client is None:
-        return {
-            "evidence_relevance": "Unknown",
-            "support_level": "Not supported",
-            "usefulness": "1/5",
-            "warning": "Groq API key is missing.",
-            "reason": "Please add GROQ_API_KEY to your .env file."
-        }
-
     evidence_text = ""
 
     for chunk in retrieved_chunks:
