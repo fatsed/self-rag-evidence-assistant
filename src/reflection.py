@@ -50,11 +50,31 @@ def judge_evidence_quality(retrieved_chunks, good_score_threshold=0.35):
         "reason": "The retrieved evidence may not be strongly related to the question.",
     }
 
+def count_evidence_labels(retrieved_chunks):
+    """
+    Count relevance labels for retrieved evidence chunks.
+    """
+    label_counts = {
+        "Relevant": 0,
+        "Partially relevant": 0,
+        "Weak evidence": 0,
+    }
+
+    for chunk in retrieved_chunks:
+        label = chunk.get("evidence_label", "Weak evidence")
+
+        if label in label_counts:
+            label_counts[label] += 1
+        else:
+            label_counts["Weak evidence"] += 1
+
+    return label_counts
 
 def create_reflection_summary(retrieval_decision, evidence_quality, retrieved_chunks, critique):
     """
     Create a reflection summary for the final pipeline output.
     """
+    label_counts = count_evidence_labels(retrieved_chunks)
     return {
         "retrieval_decision": retrieval_decision.get("decision", "Unknown"),
         "retrieval_needed": retrieval_decision.get("needed", False),
@@ -65,4 +85,7 @@ def create_reflection_summary(retrieval_decision, evidence_quality, retrieved_ch
         "evidence_reason": evidence_quality.get("reason", "No evidence reason provided."),
         "support_level": critique.get("support_level", "Unknown"),
         "warning": critique.get("warning", "No warning."),
+        "relevant_evidence_count": label_counts["Relevant"],
+        "partially_relevant_evidence_count": label_counts["Partially relevant"],
+        "weak_evidence_count": label_counts["Weak evidence"],
     }
