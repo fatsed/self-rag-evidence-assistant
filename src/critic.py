@@ -17,13 +17,13 @@ def critique_answer(question, retrieved_chunks, answer):
     """
     critic the generated answer based on the retrieved evidence.
     """
-    if not retrieved_chunks:
+    if client is None:
         return {
-            "evidence_relevance": "Irrelevant",
+            "evidence_relevance": "Unknown",
             "support_level": "Not supported",
             "usefulness": "1/5",
-            "warning": "No relevant evidence was found.",
-            "reason": "The system could not retrieve any evidence from the uploaded documents.",
+            "warning": "API key is missing.",
+            "reason": "Please add your GROQ_API_KEY to the .env file before running the critique step.",
         }
 
     if client is None:
@@ -88,21 +88,32 @@ def critique_answer(question, retrieved_chunks, answer):
         }
     ]
 
-    response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
-        messages=messages,
-        temperature=0.0,
-        response_format={"type": "json_object"},
-    )
-    critique_text = response.choices[0].message.content.strip()
-
     try:
-        return json.loads(critique_text)
-    except json.JSONDecodeError:
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=messages,
+            temperature=0.0,
+            response_format={"type": "json_object"},
+        )
+
+        critique_text = response.choices[0].message.content.strip()
+
+        try:
+            return json.loads(critique_text)
+        except json.JSONDecodeError:
+            return {
+                "evidence_relevance": "Unknown",
+                "support_level": "Unknown",
+                "usefulness": "Unknown",
+                "warning": "The critique could not be parsed as JSON.",
+                "reason": critique_text,
+            }
+
+    except Exception as error:
         return {
             "evidence_relevance": "Unknown",
             "support_level": "Unknown",
             "usefulness": "Unknown",
-            "warning": "The critique could not be parsed as JSON.",
-            "reason": critique_text,
+            "warning": "The critique step failed.",
+            "reason": f"The language model request failed. Error: {error}",
         }

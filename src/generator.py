@@ -19,8 +19,10 @@ def generate_answer(question, retrieved_chunks):
         return "I could not find enough evidence in the uploaded documents to answer this question."
 
     if client is None:
-        return "Groq API key is missing. Please add GROQ_API_KEY to your .env file."
-
+        return (
+            "API key is missing. Please add your GROQ_API_KEY to the .env file "
+            "before generating an answer."
+        )
     evidence_text = ""
     for chunk in retrieved_chunks:
         evidence_text += f"Source: {chunk['file_name']} - chunk {chunk['chunk_id']}\n"
@@ -56,10 +58,17 @@ def generate_answer(question, retrieved_chunks):
         }
     ]
 
-    response = client.chat.completions.create(
-        model = "llama-3.1-8b-instant",
-        messages = messages,
-        temperature = 0.2,
-    )
+    try:
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=messages,
+            temperature=0.2,
+        )
 
-    return response.choices[0].message.content.strip()
+        return response.choices[0].message.content.strip()
+
+    except Exception as error:
+        return (
+            "The answer could not be generated because the language model request failed. "
+            f"Error: {error}"
+        )
