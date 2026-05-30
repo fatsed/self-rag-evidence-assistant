@@ -24,30 +24,30 @@ def critique_evidence_chunk(question, chunk):
         }
 
     prompt = f"""
-You are evaluating one retrieved evidence chunk for a Self-RAG-style assistant.
-
-Question:
-{question}
-
-Evidence chunk:
-{chunk["text"]}
-
-Evaluate whether this evidence chunk is useful for answering the question.
-
-Return only valid JSON using this exact structure:
-
-{{
-  "evidence_label": "Relevant / Partially relevant / Irrelevant",
-  "evidence_reason": "One short sentence explaining why."
-}}
-
-Rules:
-- Use Relevant if the evidence directly helps answer the question.
-- Use Partially relevant if the evidence is related but does not fully answer the question.
-- Use Irrelevant if the evidence does not help answer the question.
-- Do not include markdown.
-- Do not include extra text outside the JSON.
-"""
+        You are evaluating one retrieved evidence chunk for a Self-RAG-style assistant.
+        
+        Question:
+        {question}
+        
+        Evidence chunk:
+        {chunk["text"]}
+        
+        Evaluate whether this evidence chunk is useful for answering the question.
+        
+        Return only valid JSON using this exact structure:
+        
+        {{
+          "evidence_label": "Relevant / Partially relevant / Irrelevant",
+          "evidence_reason": "One short sentence explaining why."
+        }}
+        
+        Rules:
+        - Use Relevant if the evidence directly helps answer the question.
+        - Use Partially relevant if the evidence is related but does not fully answer the question.
+        - Use Irrelevant if the evidence does not help answer the question.
+        - Do not include markdown.
+        - Do not include extra text outside the JSON.
+        """
 
     messages: list[ChatCompletionUserMessageParam] = [
         {
@@ -72,7 +72,6 @@ Rules:
             "evidence_label": chunk.get("evidence_label", "Unknown"),
             "evidence_reason": f"Evidence critique failed. Error: {error}",
         }
-
 
 def critique_retrieved_evidence(question, retrieved_chunks):
     """
