@@ -193,12 +193,13 @@ if run_button:
 
 if st.session_state.result:
     result = st.session_state.result
-    answer_tab, evidence_tab, critique_tab, files_tab = st.tabs(
-        ["Answer", "Retrieved Evidence", "Critique", "Uploaded Files"]
+    answer_tab, evidence_tab, critique_tab, reflection_tab, files_tab = st.tabs(
+        ["Answer", "Retrieved Evidence", "Critique", "Reflection", "Uploaded Files"]
     )
     answer = result.get("answer", "")
     critique = result.get("critique", "")
     evidence = result.get("evidence", [])
+    reflection = result.get("reflection", {})
 
     if isinstance(critique, dict):
         evidence_relevance = critique.get("evidence_relevance", "Unknown")
@@ -283,6 +284,43 @@ if st.session_state.result:
         st.markdown("### Reason")
         st.write(reason)
 
+    with reflection_tab:
+        st.subheader("Self-RAG Reflection")
+
+        if reflection:
+            col1, col2, col3 = st.columns(3)
+
+            with col1:
+                st.metric(
+                    "Retrieval decision",
+                    reflection.get("retrieval_decision", "Unknown")
+                )
+
+            with col2:
+                st.metric(
+                    "Retrieved chunks",
+                    reflection.get("retrieved_chunks", "Unknown")
+                )
+
+            with col3:
+                st.metric(
+                    "Best evidence score",
+                    reflection.get("best_evidence_score", "Unknown")
+                )
+
+            st.markdown("### Retrieval reason")
+            st.write(reflection.get("retrieval_reason", "No reason provided."))
+            st.markdown("### Evidence quality")
+            st.success(reflection.get("evidence_quality", "Unknown"))
+            st.markdown("### Evidence reason")
+            st.write(reflection.get("evidence_reason", "No evidence reason provided."))
+            st.markdown("### Support level")
+            st.write(reflection.get("support_level", "Unknown"))
+
+            st.markdown("### Warning")
+            st.write(reflection.get("warning", "No warning."))
+        else:
+            st.info("No reflection summary available.")
 
     with files_tab:
         st.subheader("Uploaded Files")

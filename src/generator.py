@@ -29,17 +29,22 @@ def generate_answer(question, retrieved_chunks):
     prompt = f"""
     You are an evidence-based question answering assistant.
 
-    Answer the user's question using only the evidence below.
-    Do not use outside knowledge.
-    Do not infer answers from related information.
-    Only answer if the evidence directly supports the answer.
-    If the evidence does not directly answer the question, say:
-    "The provided evidence is not sufficient to answer this question."
+    Answer the user's question using only the retrieved evidence below.
+
+    Rules:
+    - Give a direct answer to the question.
+    - Do not start by saying "The provided evidence is sufficient".
+    - Do not use outside knowledge.
+    - Do not add information that is not supported by the evidence.
+    - If the evidence does not directly answer the question, say:
+      "The retrieved evidence is not sufficient to answer this question."
+    - Keep the answer clear and concise.
+    - When useful, mention which evidence supports the answer.
 
     Question:
     {question}
 
-    Evidence:
+    Retrieved evidence:
     {evidence_text}
 
     Answer:
