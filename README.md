@@ -42,27 +42,35 @@ Show a reflection summary
 
 ---
 
+## Demo
+
+Here is a screenshot of the app after uploading the Self-RAG paper and asking a question.
+
+![Demo screenshot](assets/demo.png)
+
+---
+
 ## Features
 
-- Upload PDF, TXT, and DOCX files
-- Ask questions about uploaded documents
-- Retrieve relevant evidence chunks
-- Generate an answer using Groq API
-- Check whether the answer is supported by the retrieved evidence
-- Show critique results
-- Show a simple Self-RAG-style reflection summary
-- Download the result as a TXT file
+* Upload PDF, TXT, and DOCX files
+* Ask questions about uploaded documents
+* Retrieve relevant evidence chunks
+* Generate an answer using Groq API
+* Check whether the answer is supported by the retrieved evidence
+* Show critique results
+* Show a simple Self-RAG-style reflection summary
+* Download the result as a TXT file
 
 ---
 
 ## Self-RAG Ideas Used in This Project
 
-| Self-RAG idea | How I used it in this project |
-|---|---|
-| Retrieval | The app finds relevant chunks from uploaded documents |
-| Critique | The app checks whether the answer is supported by evidence |
-| Reflection | The app shows a summary of retrieval decision, evidence quality, and support level |
-| Evidence-based answer | The answer is generated only from retrieved evidence |
+| Self-RAG idea         | How I used it in this project                                                      |
+| --------------------- | ---------------------------------------------------------------------------------- |
+| Retrieval             | The app finds relevant chunks from uploaded documents                              |
+| Critique              | The app checks whether the answer is supported by evidence                         |
+| Reflection            | The app shows a summary of retrieval decision, evidence quality, and support level |
+| Evidence-based answer | The answer is generated only from retrieved evidence                               |
 
 ---
 
@@ -103,15 +111,15 @@ self-rag-evidence-assistant/
 
 ## Tech Stack
 
-- Python
-- Streamlit
-- Groq API
-- Sentence Transformers
-- Scikit-learn
-- PyPDF
-- python-docx
-- NumPy
-- python-dotenv
+* Python
+* Streamlit
+* Groq API
+* Sentence Transformers
+* Scikit-learn
+* PyPDF
+* python-docx
+* NumPy
+* python-dotenv
 
 ---
 
@@ -190,10 +198,10 @@ It includes a sample question, generated answer, retrieved evidence, critique re
 
 I also added short notes while studying the paper:
 
-- [Self-RAG Paper Summary](notes/paper_summary.md)
-- [Traditional RAG](notes/traditional_rag.md)
-- [Self-RAG](notes/self_rag.md)
-- [Key Concepts](notes/key_concepts.md)
+* [Self-RAG Paper Summary](notes/paper_summary.md)
+* [Traditional RAG](notes/traditional_rag.md)
+* [Self-RAG](notes/self_rag.md)
+* [Key Concepts](notes/key_concepts.md)
 
 ---
 
@@ -215,7 +223,7 @@ Instead of only reading the paper, I wanted to make something practical where I 
 
 ## Reference
 
-Paper: Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection  
+Paper: Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection
 Official repository: https://github.com/akariasai/self-rag
 
 ---
