@@ -1,73 +1,45 @@
-# Example Outputs
+# Example Output
 
-This file shows sample outputs from the Self-RAG Evidence Assistant.
+This file shows a sample output from the Self-RAG Evidence Assistant.
 
-The examples demonstrate how the assistant retrieves evidence, generates an answer, and critiques whether the answer is supported by the retrieved evidence.
+## Example Question
 
----
+What is critique in Self-RAG?
 
-## Example 1 — Supported Answer
+## Generated Answer
 
-### Question
+In Self-RAG, critique is used to evaluate whether the generated answer is supported by the retrieved evidence. It helps the system check the relevance of the evidence and the support level of the answer.
 
-```text
-How does Self-RAG evaluate generated answers?
-```
+## Retrieved Evidence
 
-### Answer
+### Evidence 1
 
-```text
-Self-RAG evaluates generated answers by checking whether the retrieved evidence is relevant and whether the generated answer is supported by that evidence. It uses critique-style evaluation to review the quality and usefulness of the response.
-```
+**Source:** self-rag-paper.pdf  
+**Chunk:** 6  
+**Score:** 0.623
 
-### Retrieved Evidence
+The retrieved passage explains that Self-RAG uses reflection tokens to decide when retrieval is needed and to critique whether the generated output is supported by evidence.
 
-```text
-Source: self-rag-paper.pdf
-Chunk: 3
-Score: 0.635
+### Evidence 2
 
-The retrieved passage explains that Self-RAG reflects on retrieved passages and generated outputs, and uses critique tokens to evaluate relevance, support, and usefulness.
-```
+**Source:** self-rag-paper.pdf  
+**Chunk:** 38  
+**Score:** 0.586
 
-### Critique
+The retrieved passage describes how critique tokens help evaluate generated responses using retrieved passages.
 
-```text
-Evidence relevance: Fully relevant
-Support level: Fully supported
-Usefulness: 5/5
-Warning: No warning.
-Reason: The answer is directly supported by the retrieved evidence.
-```
+## Critique
 
----
+**Evidence relevance:** Relevant  
+**Support level:** Fully supported  
+**Usefulness:** 5/5  
+**Warning:** No warning.  
+**Reason:** The answer is supported by the retrieved evidence.
 
-## Example 2 — Unsupported Question
+## Reflection Summary
 
-### Question
-
-```text
-What is the capital of Japan?
-```
-
-### Answer
-
-```text
-The provided evidence is not sufficient to answer this question.
-```
-
-### Retrieved Evidence
-
-```text
-No evidence found.
-```
-
-### Critique
-
-```text
-Evidence relevance: Irrelevant
-Support level: Not supported
-Usefulness: 1/5
-Warning: No direct evidence found.
-Reason: The uploaded documents do not provide evidence for answering this question.
-```
+**Retrieval decision:** Retrieve  
+**Retrieved chunks:** 3  
+**Best evidence score:** 0.623  
+**Evidence quality:** Strong evidence  
+**Retrieval reason:** The answer should be grounded in the uploaded documents.
