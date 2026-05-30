@@ -40,6 +40,15 @@ Warning: No warning.
 Reason: The answer is directly supported by the retrieved evidence.
 ```
 
+### Reflection Summary
+
+```text
+Retrieval decision: Retrieve
+Retrieved chunks: 3
+Best evidence score: 0.635
+Evidence quality: Strong evidence
+Retrieval reason: The answer should be grounded in the uploaded documents.
+```
 ---
 
 ## Example 2 — Unsupported Question
@@ -70,4 +79,13 @@ Support level: Not supported
 Usefulness: 1/5
 Warning: No direct evidence found.
 Reason: The uploaded documents do not provide evidence for answering this question.
+```
+### Reflection Summary
+
+```text
+Retrieval decision: Retrieve
+Retrieved chunks: 0
+Best evidence score: 0.000
+Evidence quality: No evidence
+Retrieval reason: The answer should be grounded in the uploaded documents.
 ```
