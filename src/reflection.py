@@ -3,7 +3,7 @@ def decide_retrieval_need(question, uploaded_files):
     Decide whether document retrieval should be used.
     This is a simplified Self-RAG-style decision step.
     In this project, retrieval is needed when the user uploads documents
-    and asks a valid question.
+    and asks a valid document-based question.
     """
     if not uploaded_files:
         return {
@@ -12,18 +12,37 @@ def decide_retrieval_need(question, uploaded_files):
             "reason": "No documents were uploaded.",
         }
 
-    if not question.strip():
+    question_text = question.strip().lower()
+
+    if not question_text:
         return {
             "needed": False,
             "decision": "No retrieval",
             "reason": "No question was provided.",
         }
+
+    conversational_inputs = [
+        "hi",
+        "hello",
+        "hey",
+        "thanks",
+        "thank you",
+        "what can you do",
+        "what can you do?",
+    ]
+
+    if question_text in conversational_inputs:
+        return {
+            "needed": False,
+            "decision": "No retrieval",
+            "reason": "The question is conversational and does not need document retrieval.",
+        }
+
     return {
         "needed": True,
         "decision": "Retrieve",
         "reason": "The answer should be grounded in the uploaded documents.",
     }
-
 
 def judge_evidence_quality(retrieved_chunks, good_score_threshold=0.35):
     """
