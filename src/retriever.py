@@ -2,6 +2,17 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from src.embedder import create_embeddings
 
+def label_evidence(score):
+    """
+    Add a simple relevance label to each retrieved evidence chunk.
+    This is a simplified Self-RAG-style reflection step.
+    """
+    if score >= 0.45:
+        return "Relevant"
+    if score >= 0.25:
+        return "Partially relevant"
+    return "Weak evidence"
+
 def retrieve_relevant_chunks(question, chunks, top_k=3, min_score=0.25):
     """
     find the most relevant chunks for the user question.
@@ -32,6 +43,7 @@ def retrieve_relevant_chunks(question, chunks, top_k=3, min_score=0.25):
                 "chunk_id": chunk["chunk_id"],
                 "text": chunk["text"],
                 "score": score,
+                "evidence_label": label_evidence(score),
             }
         )
         if len(results) == top_k:

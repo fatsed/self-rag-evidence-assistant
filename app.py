@@ -232,7 +232,8 @@ if st.session_state.result:
                 st.write(
                     f"**Evidence {i}:** {chunk['file_name']} | "
                     f"Chunk {chunk['chunk_id']} | "
-                    f"Score: {chunk['score']:.3f}"
+                    f"Score: {chunk['score']:.3f} | "
+                    f"{chunk.get('evidence_label', 'Unknown')}"
                 )
         else:
             st.info("No evidence was used for this answer.")
@@ -249,22 +250,23 @@ if st.session_state.result:
 
         for i, chunk in enumerate(evidence, start=1):
             output_text += f"""
-    Evidence {i}
-    Source: {chunk['file_name']}
-    Chunk: {chunk['chunk_id']}
-    Score: {chunk['score']:.3f}
-    Text: {chunk['text']}
+            Evidence {i}
+            Source: {chunk['file_name']}
+            Chunk: {chunk['chunk_id']}
+            Score: {chunk['score']:.3f}
+            Label: {chunk.get('evidence_label', 'Unknown')}
+            Text: {chunk['text']}
 
-    """
+            """
 
         output_text += f"""
-    Critique:
-    Evidence relevance: {evidence_relevance}
-    Support level: {support_level}
-    Usefulness: {usefulness}
-    Warning: {warning}
-    Reason: {reason}
-    """
+            Critique:
+            Evidence relevance: {evidence_relevance}
+            Support level: {support_level}
+            Usefulness: {usefulness}
+            Warning: {warning}
+            Reason: {reason}
+            """
 
         st.download_button(
             label="Download result as TXT",
@@ -282,7 +284,10 @@ if st.session_state.result:
             for i, chunk in enumerate(evidence, start=1):
                 score = chunk["score"]
                 with st.expander(
-                        f"Evidence {i} | {chunk['file_name']} | Chunk {chunk['chunk_id']} | Score: {score:.3f}"
+                        f"Evidence {i} | {chunk['file_name']} | "
+                        f"Chunk {chunk['chunk_id']} | "
+                        f"Score: {score:.3f} | "
+                        f"{chunk.get('evidence_label', 'Unknown')}"
                 ):
                     st.write(chunk["text"])
         else:
