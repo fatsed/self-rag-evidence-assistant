@@ -228,9 +228,8 @@ Paper: Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Refle
 Official repository: https://github.com/akariasai/self-rag
 
 ---
-
 ## Status
 
 MVP completed.
 
-I may improve it later by adding deployment, better retrieval settings, and more evaluation options.
+For now, the main workflow is complete. Future improvements may include deployment, better retrieval settings, and more evaluation options.
