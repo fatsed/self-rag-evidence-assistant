@@ -235,6 +235,7 @@ if st.session_state.result:
                     f"Score: {chunk['score']:.3f} | "
                     f"{chunk.get('evidence_label', 'Unknown')}"
                 )
+                st.caption(chunk.get("evidence_reason", "No evidence critique reason provided."))
         else:
             st.info("No evidence was used for this answer.")
 
@@ -255,6 +256,7 @@ if st.session_state.result:
             Chunk: {chunk['chunk_id']}
             Score: {chunk['score']:.3f}
             Label: {chunk.get('evidence_label', 'Unknown')}
+            Reason: {chunk.get('evidence_reason', 'No evidence critique reason provided.')}
             Text: {chunk['text']}
 
             """
@@ -289,6 +291,9 @@ if st.session_state.result:
                         f"Score: {score:.3f} | "
                         f"{chunk.get('evidence_label', 'Unknown')}"
                 ):
+                    st.markdown("**Evidence critique reason:**")
+                    st.write(chunk.get("evidence_reason", "No evidence critique reason provided."))
+                    st.markdown("**Chunk text:**")
                     st.write(chunk["text"])
         else:
             st.info("No evidence found.")

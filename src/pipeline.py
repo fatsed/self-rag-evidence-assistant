@@ -8,7 +8,7 @@ from src.reflection import (
     judge_evidence_quality,
     create_reflection_summary,
 )
-
+from src.evidence_critic import critique_retrieved_evidence
 
 def run_pipeline(uploaded_files, question, top_k=3, min_score=0.25):
     """
@@ -103,9 +103,12 @@ def run_pipeline(uploaded_files, question, top_k=3, min_score=0.25):
         min_score=min_score,
     )
 
+    retrieved_chunks = critique_retrieved_evidence(question, retrieved_chunks)
+
     evidence_quality = judge_evidence_quality(retrieved_chunks)
 
     answer = generate_answer(question, retrieved_chunks)
+
     critique = critique_answer(question, retrieved_chunks, answer)
 
     reflection = create_reflection_summary(
