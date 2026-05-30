@@ -32,10 +32,10 @@ def read_docx_file(uploaded_file):
             text += para.text + '\n'
     return text
 
-#load
-def  load_uploaded_files(uploaded_files):
+def load_uploaded_files(uploaded_files):
     """
-    load text from multiple uploaded files.(Supports PDF, TXT, and DOCX files)
+    Load text from multiple uploaded files.
+    Supports PDF, TXT, and DOCX files.
     """
     documents = []
 

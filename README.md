@@ -59,6 +59,7 @@ Here is a screenshot of the app after uploading the Self-RAG paper and asking a 
 * Check whether the answer is supported by the retrieved evidence
 * Show critique results
 * Show a simple Self-RAG-style reflection summary
+* Show evidence quality based on the best retrieved similarity score
 * Download the result as a TXT file
 
 ---
