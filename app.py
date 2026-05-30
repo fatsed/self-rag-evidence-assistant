@@ -288,7 +288,7 @@ if st.session_state.result:
         st.subheader("Self-RAG Reflection")
 
         if reflection:
-            col1, col2, col3, col4 = st.columns(4)
+            col1, col2, col3 = st.columns(3)
 
             with col1:
                 st.metric(
@@ -308,14 +308,10 @@ if st.session_state.result:
                     reflection.get("best_evidence_score", "Unknown")
                 )
 
-            with col4:
-                st.metric(
-                    "Evidence quality",
-                    reflection.get("evidence_quality", "Unknown")
-                )
-
             st.markdown("### Retrieval reason")
             st.write(reflection.get("retrieval_reason", "No reason provided."))
+            st.markdown("### Evidence quality")
+            st.success(reflection.get("evidence_quality", "Unknown"))
             st.markdown("### Evidence reason")
             st.write(reflection.get("evidence_reason", "No evidence reason provided."))
             st.markdown("### Support level")
