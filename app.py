@@ -346,6 +346,28 @@ if st.session_state.result:
             st.write(reflection.get("retrieval_reason", "No reason provided."))
             st.markdown("### Evidence quality")
             st.success(reflection.get("evidence_quality", "Unknown"))
+
+            st.markdown("### Evidence label counts")
+
+            label_col1, label_col2, label_col3 = st.columns(3)
+
+            with label_col1:
+                st.metric(
+                    "Relevant",
+                    reflection.get("relevant_evidence_count", 0)
+                )
+
+            with label_col2:
+                st.metric(
+                    "Partially relevant",
+                    reflection.get("partially_relevant_evidence_count", 0)
+                )
+
+            with label_col3:
+                st.metric(
+                    "Weak evidence",
+                    reflection.get("weak_evidence_count", 0)
+                )
             st.markdown("### Evidence reason")
             st.write(reflection.get("evidence_reason", "No evidence reason provided."))
             st.markdown("### Support level")
