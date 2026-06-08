@@ -96,6 +96,7 @@ Here is a screenshot of the app after uploading the Self-RAG paper and asking a 
 self-rag-evidence-assistant/
 │
 ├── app.py
+├── download_model.py
 ├── README.md
 ├── requirements.txt
 ├── .env.example
@@ -254,4 +255,10 @@ MVP completed.
 
 The current version includes document upload, retrieval, LLM-based evidence critique, answer generation, answer critique, answer revision, and reflection summary.
 
-Future improvements may include deployment, better retrieval settings, more evaluation options, and a small dataset for testing the evidence critique step.
+## Future Improvements
+
+- Deploy a public demo
+- Improve retrieval settings
+- Add evaluation options
+- Add a small dataset for testing the evidence critique step
+- Support more document formats
