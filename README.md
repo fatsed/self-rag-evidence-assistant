@@ -261,8 +261,4 @@ The current version includes document upload, retrieval, LLM-based evidence crit
 - Improve retrieval settings
 - Add evaluation options
 - Add a small dataset for testing the evidence critique step
-<<<<<<< HEAD
 - Support more document formats
-=======
-- Support more document formats
->>>>>>> b429bd4 (Improve README future improvements)
