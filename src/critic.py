@@ -1,17 +1,9 @@
-import os
-from pathlib import Path
 import json
-from dotenv import load_dotenv
-from groq import Groq
 from groq.types.chat import ChatCompletionUserMessageParam
+from src.config import get_groq_client, missing_api_key_message
 
+client = get_groq_client()
 
-env_path = Path(__file__).resolve().parent.parent / ".env"
-load_dotenv(dotenv_path=env_path, override=True)
-
-api_key = os.getenv("GROQ_API_KEY")
-
-client = Groq(api_key=api_key) if api_key else None
 
 def critique_answer(question, retrieved_chunks, answer):
     """
@@ -23,7 +15,7 @@ def critique_answer(question, retrieved_chunks, answer):
             "support_level": "Not supported",
             "usefulness": "1/5",
             "warning": "API key is missing.",
-            "reason": "Please add your GROQ_API_KEY to the .env file before running the critique step.",
+            "reason": missing_api_key_message(),
         }
 
     evidence_text = ""

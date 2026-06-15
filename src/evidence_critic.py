@@ -1,17 +1,8 @@
 import json
-import os
-from pathlib import Path
-
-from dotenv import load_dotenv
-from groq import Groq
 from groq.types.chat import ChatCompletionUserMessageParam
+from src.config import get_groq_client, missing_api_key_message
 
-env_path = Path(__file__).resolve().parent.parent / ".env"
-load_dotenv(dotenv_path=env_path, override=True)
-
-api_key = os.getenv("GROQ_API_KEY")
-client = Groq(api_key=api_key) if api_key else None
-
+client = get_groq_client()
 
 def critique_evidence_chunk(question, chunk):
     """
@@ -20,7 +11,7 @@ def critique_evidence_chunk(question, chunk):
     if client is None:
         return {
             "evidence_label": chunk.get("evidence_label", "Unknown"),
-            "evidence_reason": "API key is missing, so the evidence was not evaluated by the language model.",
+            "evidence_reason": missing_api_key_message(),
         }
 
     prompt = f"""
