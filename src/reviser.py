@@ -1,16 +1,7 @@
-import os
-from pathlib import Path
-
-from dotenv import load_dotenv
-from groq import Groq
 from groq.types.chat import ChatCompletionUserMessageParam
+from src.config import get_groq_client
 
-env_path = Path(__file__).resolve().parent.parent / ".env"
-load_dotenv(dotenv_path=env_path, override=True)
-
-api_key = os.getenv("GROQ_API_KEY")
-client = Groq(api_key=api_key) if api_key else None
-
+client = get_groq_client()
 
 def revise_answer_if_needed(question, retrieved_chunks, answer, critique):
     """
@@ -34,33 +25,33 @@ def revise_answer_if_needed(question, retrieved_chunks, answer, critique):
         evidence_text += chunk["text"] + "\n\n"
 
     prompt = f"""
-You are revising an answer for a Self-RAG-style evidence assistant.
+    You are revising an answer for a Self-RAG-style evidence assistant.
 
-The original answer may not be fully supported by the retrieved evidence.
+    The original answer may not be fully supported by the retrieved evidence.
 
-Your task:
-- Revise the answer using only the retrieved evidence.
-- Remove any unsupported information.
-- Keep the answer clear and concise.
-- If the evidence is not enough, say:
-  "The retrieved evidence is not sufficient to answer this question."
+    Your task:
+    - Revise the answer using only the retrieved evidence.
+    - Remove any unsupported information.
+    - Keep the answer clear and concise.
+    - If the evidence is not enough, say:
+    "The retrieved evidence is not sufficient to answer this question."
 
-Question:
-{question}
+    Question:
+    {question}
 
-Retrieved evidence:
-{evidence_text}
+    Retrieved evidence:
+    {evidence_text}
 
-Original answer:
-{answer}
+    Original answer:
+    {answer}
 
-Critique:
-Support level: {critique.get("support_level", "Unknown")}
-Warning: {critique.get("warning", "No warning.")}
-Reason: {critique.get("reason", "No reason provided.")}
+    Critique:
+    Support level: {critique.get("support_level", "Unknown")}
+    Warning: {critique.get("warning", "No warning.")}
+    Reason: {critique.get("reason", "No reason provided.")}
 
-Revised answer:
-"""
+    Revised answer:
+    """
 
     messages: list[ChatCompletionUserMessageParam] = [
         {

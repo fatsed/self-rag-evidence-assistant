@@ -1,15 +1,6 @@
-import os
-from pathlib import Path
-from dotenv import load_dotenv
-from groq import Groq
 from groq.types.chat import ChatCompletionUserMessageParam
-
-env_path = Path(__file__).resolve().parent.parent / ".env"
-load_dotenv(dotenv_path=env_path, override=True)
-
-api_key = os.getenv("GROQ_API_KEY")
-
-client = Groq(api_key=api_key) if api_key else None
+from src.config import get_groq_client, missing_api_key_message
+client = get_groq_client()
 
 def generate_answer(question, retrieved_chunks):
     """
@@ -19,10 +10,8 @@ def generate_answer(question, retrieved_chunks):
         return "I could not find enough evidence in the uploaded documents to answer this question."
 
     if client is None:
-        return (
-            "API key is missing. Please add your GROQ_API_KEY to the .env file "
-            "before generating an answer."
-        )
+        return missing_api_key_message()
+
     evidence_text = ""
     for chunk in retrieved_chunks:
         evidence_text += f"Source: {chunk['file_name']} - chunk {chunk['chunk_id']}\n"
