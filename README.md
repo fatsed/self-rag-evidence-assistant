@@ -225,22 +225,6 @@ GET /health
 
 Returns the current API status.
 
-### Ask a Question
-
-```http
-POST /ask
-```
-
-Accepts a JSON request containing:
-
-```json
-{
-  "question": "What is Self-RAG?",
-  "top_k": 3,
-  "min_score": 0.25
-}
-```
-
 ### Ask a Question with a File
 
 ```http
